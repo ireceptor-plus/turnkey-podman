@@ -4,6 +4,12 @@ The provided scripts in scriptspod let the turnkey service (https://github.com/s
 
 The web\_stats scripts and test\_performance.sh have not yet been adjusted.
 
+The scripts have been tested on the following operating systems:
+
+* Centos 8.3
+* Fedora 33
+* Debian 11 RC1 Bullseye
+
 ## Installation of the scripts
 Clone branch production-v3 from https://github.com/sfu-ireceptor/turnkey-service-php to a location where you have enough storage to host the amount of data you want to support. 
 
