@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_DIR=`dirname "$0"`
 
-SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPT_DIR_FULL="$( readlink -f ${SCRIPT_DIR}  )";
 POD_CONF_FILE="podman.conf.sh"
 # read configuration for turnkey pod
 . $SCRIPT_DIR_FULL/$POD_CONF_FILE

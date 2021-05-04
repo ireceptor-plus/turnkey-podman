@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_DIR=`dirname "$0"`
 
@@ -30,5 +30,8 @@ ${SCRIPT_DIR}/create_database_indexes.sh
 echo -n "Done $0: "
 date
 
+SCRIPT_DIR_FULL="$( readlink -f ${SCRIPT_DIR}  )";
+POD_CONF_FILE="podman.conf.sh"
+. $SCRIPT_DIR_FULL/$POD_CONF_FILE
 # trigger db backup
 touch $DO_BKUP_FLAG

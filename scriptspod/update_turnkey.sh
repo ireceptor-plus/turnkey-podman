@@ -14,17 +14,18 @@ git -C ${SCRIPT_DIR} pull.rebase false
 echo "Done"
 echo
 
-SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPT_DIR_FULL="$( readlink -f ${SCRIPT_DIR}  )";
 POD_CONF_FILE="podman.conf.sh"
 . $SCRIPT_DIR_FULL/$POD_CONF_FILE
 
 # download latest Docker images from Docker Hub
 echo "Downloading Docker images from Docker Hub.."
 #sudo docker-compose --file ${SCRIPT_DIR}/docker-compose.yml --project-name turnkey-service pull
-podman pull ireceptor/repository-mongodb:$DATABASE_TAG
-podman pull ireceptor/service-php-mongodb:$API_TAG
-podman pull ireceptor/dataloading-mongo:$DATALOADING_TAG
-podman pull ireceptor/dataloading-mongo:$PERFORMANCE_TESTING_TAG
+podman pull registry.hub.docker.com/ireceptor/repository-mongodb:$DATABASE_TAG
+podman pull registry.hub.docker.com/ireceptor/service-php-mongodb:$API_TAG
+podman pull registry.hub.docker.com/ireceptor/dataloading-mongo:$DATALOADING_TAG
+podman pull registry.hub.docker.com/ireceptor/dataloading-mongo:$PERFORMANCE_TESTING_TAG
 echo "Done"
 echo
 

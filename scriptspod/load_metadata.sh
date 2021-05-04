@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # check number of arguments
 NB_ARGS=2
@@ -17,7 +17,8 @@ FILE_FOLDER=`dirname "$FILE_ABSOLUTE_PATH"`
 FILE_NAME=`basename "$FILE_ABSOLUTE_PATH"`
 
 SCRIPT_DIR=`dirname "$0"`
-SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPT_DIR_FULL="$( readlink -f ${SCRIPT_DIR}  )";
 POD_CONF_FILE="podman.conf.sh"
 . $SCRIPT_DIR_FULL/$POD_CONF_FILE
 

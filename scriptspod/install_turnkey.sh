@@ -1,10 +1,12 @@
 #!/bin/bash
 
 SCRIPT_DIR=`dirname "$0"`
-SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#SCRIPT_DIR_FULL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPT_DIR_FULL="$( readlink -f ${SCRIPT_DIR}  )";
 POD_CONF_FILE="podman.conf.sh" 
 #echo $SCRIPT_DIR
 #echo $SCRIPT_DIR_FULL
+#readlink -f  ${SCRIPT_DIR}
 #exit
 
 if [ ! -f "$SCRIPT_DIR/$POD_CONF_FILE" ]; then
@@ -23,13 +25,17 @@ log "pod external port: $POD_EX_PORT"
 log "user id running mongo db container: $POD_USER_ID"
 
 # -----------------------------------------------------------------------------
-if ! [ $(command -v $PODMAN_CMD) > 0 ];then
-    log "	$PODMAN_CMD command could not be found, install podman:$ sudo yum install poddoman"
-    exit
-else
-    log "	$PODMAN_CMD command available"		
-fi
-
+# required commands
+commands=("podman" "curl" "readlink");
+for i in "${commands[@]}"
+do
+	if ! [ $(command -v $i) > 0 ];then
+		log "	$i command could not be found, install first. "
+		exit
+	else
+		log "	$i command available"		
+	fi
+done
 # -----------------------------------------------------------------------------
 # install Docker
 
@@ -98,11 +104,11 @@ if [ $? -eq 0  ]; then
 	exit
 fi
 
-# pull images
-podman pull ireceptor/repository-mongodb:$DATABASE_TAG
-podman pull ireceptor/service-php-mongodb:$API_TAG
-podman pull ireceptor/dataloading-mongo:$DATALOADING_TAG
-podman pull ireceptor/dataloading-mongo:$PERFORMANCE_TESTING_TAG
+# pull images 
+podman pull registry.hub.docker.com/ireceptor/repository-mongodb:$DATABASE_TAG
+podman pull registry.hub.docker.com/ireceptor/service-php-mongodb:$API_TAG
+podman pull registry.hub.docker.com/ireceptor/dataloading-mongo:$DATALOADING_TAG
+podman pull registry.hub.docker.com/ireceptor/dataloading-mongo:$PERFORMANCE_TESTING_TAG
 
 log "creating the turnkey-service pod.."
 podman pod create --name $POD_NAME_SVC --share net -p $POD_EX_PORT:80 -p $POD_EX_PORT_DB:27017 

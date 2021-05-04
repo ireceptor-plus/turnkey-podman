@@ -90,4 +90,4 @@ function log () {
 	echo "$dt $msg" >> $SCRIPT_DIR/$LOGFILE_NAME
 }
 
-#log "---"
+log "---"
