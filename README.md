@@ -10,10 +10,15 @@ The scripts have been tested on the following operating systems:
 * Fedora 33
 * Debian 11 RC1 Bullseye
 
-## Installation of the scripts
-Clone branch production-v3 from https://github.com/sfu-ireceptor/turnkey-service-php to a location where you have enough storage to host the amount of data you want to support. 
+## Installation of the scripts 
 
-Copy scriptspod directory to turnkey-service installation directory. 
+* scriptspod3 contains scripts for turnkey version 3
+* scriptspod4 is for version 4
+ 
+Clone branch e.g. production-v4 from https://github.com/sfu-ireceptor/turnkey-service-php to a location where you have enough storage to host the amount of data you want to support. 
+
+Copy scriptspod4 directory to turnkey-service installation directory and create a link $ ln -s scriptspod4 scriptspod  
+
 
 ## Edit file podman.conf.sh.EDIT
 
@@ -83,7 +88,14 @@ systemctl stop pod-POD_NAME_SVC.service --user
 
 ## Load data to turnkey
 
-Follow the documentation on the turnkey service repository, just call the same scripts in the scriptspod folder.
+Follow the documentation on the turnkey service repository, just call the same scripts in the scriptspod folder. 
+
+The load_stats.sh will not work with this podman configuration (all containers in one pod), because the docker service database name is used but only the name localhost will work. 
+
+To run the statistics creation script, start the dataloading container and change in /app/stats file stats_file_create.php (line 208) and file stats_file_laod.php (line 12) so that localhost is used instead of ireceptor-database in the MongoDB constructor.
+ 
+Then run the script load_stats_mongo.sh from inside the container.
+
 
 ## Backup database
 
@@ -119,7 +131,6 @@ Schedule the backup process when the data has changed. The data load scripts wil
 ```
 
 Adjust this process (specifically the file rotation script) according to your needs. 
-
 
 ## Contact
 Send questions and comments to andreas.mann@dkfz-heidelberg.de

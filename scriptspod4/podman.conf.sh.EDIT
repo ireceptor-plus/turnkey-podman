@@ -1,0 +1,97 @@
+#!/bin/bash
+# -----------------------------------------------------------------------------
+# steps:
+# (1) provide tcp external port of pod (POD_EX_PORT)
+# (2) provide a name for the pod
+# (3) provide user id for the mongodb process which will access the host filesystem
+# (4) mv podman.conf.sh.EDIT podman.conf.sh
+# -----------------------------------------------------------------------------
+
+
+#if (( $EUID != 0 )); then
+    #echo "Please run with sudo.."
+    #exit
+#fi
+
+# service admin e-mail
+sysadmin_email="noreply@example.com";
+
+# hostname 
+host_name=$(hostname);
+
+# path to backup directory, shared by all pods on host
+# this pod will have its own dir inside that path 
+PATH_BKUP_DIR="/var/data/bkup";
+
+# if set to 1, bkup_file_rotation.sh will only use backup.daily folder
+# by default, files are kept for 14 days in that folder, see script for details
+BKUP_USES_ONLY_DIR_DAILY="0";
+
+#echo inside podman.conf.sh
+
+# if you run production and master branch of turnkey on same machine:
+# (1) provide container name suffix 
+# (2) adjust different external port for api access and db access (if required)
+# (3) use different POD_NAME_SVC value like turnkey-service-dev
+
+# container name suffix, leave empty single installation of production
+DATABASE_CONT_NAME_SUFFIX="";
+API_CONT_NAME_SUFFIX="";
+DATALOADING_CONT_NAME_SUFFIX="";
+PERFORMANCE_TESTING_CONT_NAME_SUFFIX="";
+
+# container tags are configured for production installation
+# for dev installations use other value
+
+# specify database container for pod
+DATABASE_TAG="turnkey-v4"
+# specify api container for pod
+API_TAG="turnkey-v4"
+# specify dtaloading container for pod
+DATALOADING_TAG="turnkey-v4-dataloading"
+# not used in turnkey version 4
+PERFORMANCE_TESTING_TAG="turnkey-performance-latest"
+
+# podman command name
+PODMAN_CMD="podman";
+#echo PODMAN_CMD = $PODMAN_CMD 
+
+# pod external port
+POD_EX_PORT="8443";
+#echo POD_EX_PORT = $POD_EX_PORT
+
+# external port of mongo db process
+POD_EX_PORT_DB="27017";
+
+# pod service name
+POD_NAME_SVC="turnkey-service";
+#echo POD_NAME_SVC = $POD_NAME_SVC
+
+# service account id running the pod 
+POD_USER_ID="1000"
+
+# existing file will trigger db backup
+# created by load_ and update_ scripts
+DO_BKUP_FLAG=${PATH_BKUP_DIR}/${POD_NAME_SVC}/BKUP_DB.FLAG
+
+# -----------------------------------------------------------------------------
+
+SCRIPT_DIR=`dirname "$0"`
+
+CURRENTUSER=$(who | awk 'NR==1{print $1}')
+#echo $CURRENTUSER
+
+LOGFILE_NAME="scriptspod_${host_name}_${POD_NAME_SVC}_.log"
+if [ ! -e $SCRIPT_DIR/$LOGFILE_NAME  ];then
+	touch $SCRIPT_DIR/$LOGFILE_NAME
+	#chown $CURRENTUSER:$CURRENTUSER $SCRIPT_DIR/$LOGFILE_NAME
+fi
+
+function log () {
+	local msg=$1
+	echo $msg
+	local dt=`date +%F_%T`
+	echo "$dt $msg" >> $SCRIPT_DIR/$LOGFILE_NAME
+}
+
+log "---"
