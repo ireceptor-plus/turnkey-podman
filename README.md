@@ -7,20 +7,23 @@ The web\_stats scripts and test\_performance.sh have not yet been adjusted.
 The scripts have been tested on the following operating systems:
 
 * Centos 8.3
-* Fedora 33
+* Fedora 33,34
 * Debian 11 RC1 Bullseye
+* Alma Linux 8.5
 
 ## Installation of the scripts 
 
 * scriptspod3 contains scripts for turnkey version 3
 * scriptspod4 is for version 4
- 
+* scriptspod-production-v4-2022-0111 supports production-v4 (still in development) branch from 22-01-20 
+
 Clone branch e.g. production-v4 from https://github.com/sfu-ireceptor/turnkey-service-php to a location where you have enough storage to host the amount of data you want to support. 
 
 Copy scriptspod4 directory to turnkey-service installation directory and create a link $ ln -s scriptspod4 scriptspod  
 
-
 ## Edit file podman.conf.sh.EDIT
+
+New configuration options are added with updated versions.
 
 Configure the following variables then remove .EDIT from the file. 
 
